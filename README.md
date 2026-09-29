@@ -10,7 +10,12 @@ A mobile React web app that displays real-time power quality data for a resident
 - **Analytics tab** — 24-hour PQ graph, last 3 meter readings, power quality table, and global grid state
 - **Profile tab** — user settings and attributions
 
-Power quality is scored 0–100% using an asymmetric tolerance band based on ANSI C84.1, where 100% = nominal voltage and deviations in either direction (overvoltage or undervoltage) reduce the score.
+Power quality is scored 0–100% based on the active bus profile:
+- **Distribution** (IEEE 8500-Node, bus 293471) — Ideal reference: Master-unbal.dss solved at minimum diurnal loadmult (distribution_meter_reading_simulator.jl) any positive Δv is 100%; downward sags scale linearly to 0% at −0.30 p.u.
+- **Transmission** (IEEE case2383wp, bus 6) — Ideal reference: base case2383wp case (meter_reading_simulator.jl). Health uses ANSI C84.1–inspired, piecewise linear bands on ±Δv (over- and undervoltage both reduce the score from 100% at Δv = 0).
+
+
+The actively examined bus is set by `BUS_ID` in `src/utils/gridData.js`. Selecting 293471 displays the distribution grid in the UI, while 6 displays the transmission grid.
 
 ## Tech stack
 
@@ -68,14 +73,15 @@ All data is fetched from a single Lambda function URL with a `query` parameter:
 src/
   api/          # AWS Lambda fetch wrappers
   assets/       # Images and icons
-  components/   # Shared UI components (LiveRefreshBar)
+  buttons/      # Standalone button components (ModeToggle)
+  components/   # Shared UI components (LiveRefreshBar, ZoomableGraph)
   dashboard/    # Bottom nav shell
   features/     # Page-level feature components
   frames/       # App layout (phone frame, routing)
   hooks/        # Data-fetching hooks (useGridData, useBus24h, useGlobalGridState)
   pages/        # Top-level pages (EasyPage, HardPage, UserPage)
-  styles/       # Shared style constants
-  utils/        # gridData.js — pqToPercent, pqLabel, utcNow, etc.
+  styles/       # Shared style constants (graphCard)
+  utils/        # gridData.js — pqToPercent, pqLabel, utcNow, BUS_ID, etc.
 ```
 
 ## Build
