@@ -1,4 +1,4 @@
-import { pqToPercent, formatDbTime } from '../utils/gridData';
+import { pqToPercent, formatDbTime, PQ_PROFILE } from '../utils/gridData';
 
 /** Apply the right formatter based on field name + value type. */
 function formatValue(key, value) {
@@ -15,7 +15,7 @@ function formatValue(key, value) {
 
   // PQ fields: small decimal → percent via pqToPercent
   if (/pq|quality/i.test(key) && typeof value === 'number') {
-    return `${pqToPercent(value)}%`;
+    return `${pqToPercent(value, PQ_PROFILE)}%`;
   }
 
   // Timestamp fields

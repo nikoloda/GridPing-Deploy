@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGlobalGridState } from '../hooks/useGridData';
-import { pqToPercent, utcNow } from '../utils/gridData';
+import { pqToPercent, utcNow, PQ_PROFILE } from '../utils/gridData';
 
 export default function GridWidePQ() {
   const [targetTime, setTargetTime] = useState(utcNow);
@@ -12,7 +12,7 @@ export default function GridWidePQ() {
 
   const { data, isLoading } = useGlobalGridState(targetTime);
 
-  const pqPct  = pqToPercent(data?.power_quality);
+  const pqPct  = pqToPercent(data?.power_quality, PQ_PROFILE);
   const isHigh = (data?.power_quality ?? 0) > 0;
 
   let stage;
