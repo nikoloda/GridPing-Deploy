@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { pqToPercent, parseDbTime, formatDbTime, normalizeGridRows } from "../utils/gridData";
+import { pqToPercent, parseDbTime, formatDbTime, normalizeGridRows, PQ_PROFILE } from "../utils/gridData";
 import { cardStyle, titleStyle } from "../styles/graphCard";
 import ZoomableGraph from "../components/ZoomableGraph";
 
@@ -21,7 +21,7 @@ export default function PowerQualityGraph({ gridData, isLoading }) {
       .filter((row) => row?.record_time && row?.power_quality !== undefined)
       .sort((a, b) => parseDbTime(a.record_time) - parseDbTime(b.record_time))
       .slice(-3)
-      .map((row) => ({ time: row.record_time, pq: pqToPercent(row.power_quality) })),
+      .map((row) => ({ time: row.record_time, pq: pqToPercent(row.power_quality, PQ_PROFILE) })),
     [gridData]
   );
 

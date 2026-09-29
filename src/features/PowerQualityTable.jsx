@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { pqToPercent, pqLabel, parseDbTime, formatDbTime } from '../utils/gridData';
+import { pqToPercent, pqLabel, parseDbTime, formatDbTime, PQ_PROFILE } from '../utils/gridData';
 
 const columns = [
   { key: 'time',          label: 'Time' },
@@ -17,13 +17,13 @@ function deriveOutageState(pqPct) {
 }
 
 function mapRow(row) {
-  const pqPct = pqToPercent(row.power_quality);
+  const pqPct = pqToPercent(row.power_quality, PQ_PROFILE);
   return {
     time: row.record_time
       ? formatDbTime(row.record_time, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
       : '—',
     powerQuality: pqPct,
-    outageState: row.power_quality != null ? pqLabel(row.power_quality) : deriveOutageState(pqPct),
+    outageState: row.power_quality != null ? pqLabel(row.power_quality, PQ_PROFILE) : deriveOutageState(pqPct),
     // Quality Alert: only truly critical (beyond ANSI limits)
     powerLost: pqPct <= 19 ? 'Yes' : 'No',
   };

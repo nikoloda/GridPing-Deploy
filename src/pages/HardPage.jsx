@@ -7,7 +7,7 @@ import LastOutageCard from "../features/LastOutageCard";
 import GlobalStateCard from "../features/GlobalStateCard";
 import LiveRefreshBar from "../components/LiveRefreshBar";
 import { useBus24h, useGlobalGridState } from "../hooks/useGridData";
-import { utcNow } from "../utils/gridData";
+import { utcNow, BUS_ID } from "../utils/gridData";
 
 const TAB_BUS    = "bus";
 const TAB_GLOBAL = "global";
@@ -18,7 +18,7 @@ export default function HardPage() {
   const [activeTab, setActiveTab] = useState(TAB_BUS);
   const [spinning, setSpinning] = useState(false);
 
-  const { rows, isLoading: graphLoading } = useBus24h(6, targetTime);
+  const { rows, isLoading: graphLoading } = useBus24h(BUS_ID, targetTime);
   const { data: globalState, isLoading: globalLoading } = useGlobalGridState(targetTime);
 
   const handleRefresh = useCallback(() => {

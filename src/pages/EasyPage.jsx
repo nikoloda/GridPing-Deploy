@@ -5,14 +5,14 @@ import GridWidePQ from "../features/GridWidePQ";
 import ApplianceCarousel from "../features/ApplianceCarousel";
 import LiveRefreshBar from "../components/LiveRefreshBar";
 import { useGridData } from "../hooks/useGridData";
-import { pqToPercent, utcNow } from "../utils/gridData";
+import { pqToPercent, utcNow, BUS_ID, PQ_PROFILE } from "../utils/gridData";
 
 export default function EasyPage() {
   const [pq, setPq] = useState(65);
   const [targetTime, setTargetTime] = useState(utcNow);
   const [spinning, setSpinning] = useState(false);
 
-  const { data, isLoading } = useGridData(6, targetTime);
+  const { data, isLoading } = useGridData(BUS_ID, targetTime);
 
   useEffect(() => {
     const id = setInterval(() => setTargetTime(utcNow()), 30000);
@@ -34,7 +34,7 @@ export default function EasyPage() {
         spinning={spinning}
       />
       <Dial_PQ
-        pq={pqToPercent(data?.power_quality)}
+        pq={pqToPercent(data?.power_quality, PQ_PROFILE)}
         rawPq={data?.power_quality}
         onValueChange={setPq}
         recordTime={data?.record_time}
